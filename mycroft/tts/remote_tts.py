@@ -71,11 +71,13 @@ class RemoteTTS(TTS):
     def build_request_params(self, sentence):
         pass
 
-    def __play(self, req):
+    def __play(self, req, ident=None):
         resp = req.result()
         if resp.status_code == 200:
             self.__save(resp.content)
-            play_wav(self.filename).communicate()
+            #play_wav(self.filename).communicate()
+            self.queue.put((self.audio_ext, self.filename, None, ident))
+
         else:
             LOG.error(
                 '%s Http Error: %s for url: %s' %
